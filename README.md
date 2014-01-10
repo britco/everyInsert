@@ -1,7 +1,7 @@
 everyInsert
 ===========
 
-Custom event for jQuery that gets called whenever an element with the selector you specify is inserted into the DOM.
+Custom event for jQuery that gets called whenever an element with the selector you specify is inserted into the DOM. An alternative to DOMNodeInserted since that event is now deprecated.
 
 
 ## Download
