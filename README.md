@@ -24,7 +24,7 @@ By default, everyInsert will also run on existing elements. To turn this off,
 turn existing: false. Like so:
 
 ````
-$(document).on('everyInsert', 'div', { existing: true }, function() {});
+$(document).on('everyInsert', 'div', { existing: false }, function() {});
 ````
 
 ## Inspiration
