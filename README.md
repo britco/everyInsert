@@ -3,6 +3,10 @@ everyInsert
 
 Custom event for jQuery that gets called whenever an element with the selector you specify is inserted into the DOM.
 
+
+## Download
+[every-insert-0.1.0.js](https://raw2.github.com/britco/everyInsert/master/dist/every-insert-0.1.0.js)
+
 Setup like so:
 
 ````
