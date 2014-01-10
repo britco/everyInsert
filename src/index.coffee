@@ -6,6 +6,18 @@
 	processedGUIDs = []
 	documentTagged = false
 
+	# Tag an element as processed by everyInsert
+	tag = (el) ->
+		$(el).prop('everyInsertTagged', true)
+
+	isTagged = (el) ->
+		if $(el).prop('everyInsertTagged')?
+			_isTagged = true
+		else
+			_isTagged = false
+
+		return _isTagged
+
 	# Private event for listening for new dom insertions
 	onInsert = (options,callback) ->
 		selector = options.selector
@@ -52,9 +64,9 @@
 			target = e.target
 
 			# If element was already inserted before, don't fire
-			return if $(target).prop('everyInsertTagged')?
+			return if isTagged(target)
 
-			$(target).prop('everyInsertTagged', true)
+			tag(target)
 
 			eventAnimationName = e.originalEvent.animationName
 
@@ -64,6 +76,7 @@
 
 			# Now check if animation is the one you are looking for
 			if eventAnimationName == animationName
+				console.log 'success'
 				success(e)
 
 		handleObj.data.ns = ns = ".#{handleObj.guid}"
@@ -83,22 +96,36 @@
 
 			selector = handleObj.selector
 
-			handleObj.data = {}
+			handleObj.data = handleObj.data || {}
+
+			# Set up success callback
+			callback = (e) =>
+				if not e
+					e is null
+
+				if e?.currentTarget?
+					ctx = $(e.currentTarget)
+				else if e instanceof $
+					ctx = e
+				else
+					ctx = null
+
+				handleObj.handler.call(ctx, e)
+
+			# Execute on existing elements *if specified*
+			if not handleObj?.data?.existing? or handleObj.data.existing is true
+				$(this).find(selector).each ->
+					callback($(this))
 
 			if not documentTagged
 				$(document).ready =>
 					# Prevents animations getting fired on elements getting shown
 					documentTagged = true
 
-					$('body *').each ->
-						$(this).prop('everyInsertTagged', true)
+					$('body *').each -> tag(this)
 
 			if selector
 				# Listen for new inserts
-				callback = (e) =>
-					ctx = $(e.currentTarget)
-					handleObj.handler.call(ctx, e)
-
 				onInsert({
 					el: $(this),
 					selector: selector,

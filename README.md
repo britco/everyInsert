@@ -20,5 +20,12 @@ To turn off the listener
 $(document).off('everyInsert', 'div.selector', callback)
 ````
 
+By default, everyInsert will also run on existing elements. To turn this off,
+turn existing: false. Like so:
+
+````
+$(document).on('everyInsert', 'div', { existing: true }, function() {});
+````
+
 ## Inspiration
 * http://davidwalsh.name/detect-node-insertion
