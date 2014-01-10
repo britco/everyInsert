@@ -44,8 +44,6 @@
 
 		$('head').append(style)
 
-		console.log 'adding listener'
-
 		# Listen for animationstart event, and when it matches the same
 		# animation name, call the callback
 		$(document).on(animationEvents, selector, (e) =>
