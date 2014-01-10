@@ -10,6 +10,7 @@
 	onInsert = (options,callback) ->
 		selector = options.selector
 		success = options.success || Function.prototype
+		handleObj = options.handleObj
 
 		index = animationCount + 1
 
@@ -17,7 +18,7 @@
 
 		animationName = "_nodeInserted_#{index}"
 
-		# Create the style tag for animations, if one doesn't exist yet
+		# Determine prefixes for CSS animations
 		prefix = (->
 		  styles = window.getComputedStyle(document.documentElement, "")
 		  pre = (Array::slice.call(styles).join("").match(/-(moz|webkit|ms)-/) or (styles.OLink is "" and ["", "o"]))[1]
@@ -29,24 +30,25 @@
 		)()
 
 		cssPrefix = prefix['css']
-		style = """
-			<style type="text/css">
-				@#{cssPrefix}keyframes #{animationName} {
-					from: { outline: 0px solid transparent } to { outline: 1px solid transparent }
-				}
 
-				#{selector} {
-					#{cssPrefix}animation-duration: 0.001s;
-					#{cssPrefix}animation-name: #{animationName};
-				}
-			</style>
+		# Create the style tag for animations, if one doesn't exist yet
+		handleObj.data.styleTag = styleTag = $('<style type="text/css" />')
+		stylecontent = """
+		@#{cssPrefix}keyframes #{animationName} {
+			from: { outline: 0px solid transparent } to { outline: 1px solid transparent }
+		}
+
+		#{selector} {
+			#{cssPrefix}animation-duration: 0.001s;
+			#{cssPrefix}animation-name: #{animationName};
+		}
 		"""
-
-		$('head').append(style)
+		styleTag.html(stylecontent)
+		$('head').append(styleTag)
 
 		# Listen for animationstart event, and when it matches the same
 		# animation name, call the callback
-		$(document).on(animationEvents, selector, (e) =>
+		onAnimation = (e) =>
 			target = e.target
 
 			# If element was already inserted before, don't fire
@@ -63,19 +65,25 @@
 			# Now check if animation is the one you are looking for
 			if eventAnimationName == animationName
 				success(e)
-		)
+
+		handleObj.data.ns = ns = ".#{handleObj.guid}"
+		namespacedAnimationEvents = animationEvents.replace(/[ ]/g,"#{ns} ").trim() + ns
+		handleObj.data.namespacedAnimationEvents = namespacedAnimationEvents
+
+		$(document).on(namespacedAnimationEvents, selector, onAnimation)
 
 	$.event.special.everyInsert =
 		add: (handleObj) ->
-			selector = handleObj.selector
-
 			# Only need to add event for each GUID once.. so if you do
 			# $('input').on('everyInsert') it won't add all the bindings for
 			# each input. it will just add each one.
 			if handleObj.guid in processedGUIDs
 				return
-
 			processedGUIDs.push(handleObj.guid)
+
+			selector = handleObj.selector
+
+			handleObj.data = {}
 
 			if not documentTagged
 				$(document).ready =>
@@ -97,4 +105,18 @@
 					handleObj: handleObj,
 					success: callback
 				})
+
+		remove: (handleObj) ->
+			data = handleObj['data']
+			# Remove style tag
+			$('head style').filter(->
+				styleTag = handleObj['data']['styleTag'][0]
+				if(this is styleTag)
+					return true
+				else
+					return false
+			).remove()
+
+			# Remove event listeners
+			$(document).off(data.namespacedAnimationEvents)
 )(jQuery)
