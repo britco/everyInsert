@@ -4,29 +4,12 @@
 	animationCount = 0
 	animationEvents = "animationstart mozanimationstart webkitAnimationStart oAnimationStart msanimationstart"
 	processedGUIDs = []
-
-	# Save selector selector
-	# http://stackoverflow.com/a/501316
-	# http://pygments.org/demo/132921/
-	# TODO: Look into optimization
-	$.fn._init = $.fn.init
-	$.fn.init = (selector, context) ->
-		_super = $.fn._init.apply(this, arguments)
-
-		# Save the selector as a string
-		window.setTimeout(=>
-			if selector and typeof selector is "string"
-				if _super instanceof $
-					_super.data "selector", selector
-		, 5)
-
-		_super
-
-	$.fn.init.prototype = $.fn._init.prototype
+	documentTagged = false
 
 	# Private event for listening for new dom insertions
 	onInsert = (options,callback) ->
 		selector = options.selector
+		success = options.success || Function.prototype
 
 		index = animationCount + 1
 
@@ -61,19 +44,33 @@
 
 		$('head').append(style)
 
+		console.log 'adding listener'
+
 		# Listen for animationstart event, and when it matches the same
 		# animation name, call the callback
-		$(document).on(animationEvents, (e) =>
-			animationName = e.originalEvent.animationName
+		$(document).on(animationEvents, selector, (e) =>
+			target = e.target
 
-			console.log "#{prefix.dom}AnimationName"
+			# If element was already inserted before, don't fire
+			return if $(target).prop('everyInsertTagged')?
 
-			if not animationName
-				animationName = e.originalEvent["#{prefix.dom}AnimationName"]
+			$(target).prop('everyInsertTagged', true)
+
+			eventAnimationName = e.originalEvent.animationName
+
+			# See if there is a WebkitAnimationName, etc.. property
+			if not eventAnimationName
+				eventAnimationName = e.originalEvent["#{prefix.dom}AnimationName"]
+
+			# Now check if animation is the one you are looking for
+			if eventAnimationName == animationName
+				success(e)
 		)
 
 	$.event.special.everyInsert =
 		add: (handleObj) ->
+			selector = handleObj.selector
+
 			# Only need to add event for each GUID once.. so if you do
 			# $('input').on('everyInsert') it won't add all the bindings for
 			# each input. it will just add each one.
@@ -82,22 +79,24 @@
 
 			processedGUIDs.push(handleObj.guid)
 
-			# Wait a little bit while selector is saved
-			window.setTimeout(=>
-				selector = $(this).data('selector')
+			if not documentTagged
+				$(document).ready =>
+					# Prevents animations getting fired on elements getting shown
+					documentTagged = true
 
-				if selector
-					# Listen for new inserts
-					callback = =>
+					$('body *').each ->
+						$(this).prop('everyInsertTagged', true)
 
-					onInsert({
-						el: $(this),
-						selector: selector,
-						handleObj: handleObj,
-						success: callback
-					})
-			, 10)
+			if selector
+				# Listen for new inserts
+				callback = (e) =>
+					ctx = $(e.currentTarget)
+					handleObj.handler.call(ctx, e)
 
-			preHandler = (ctx) ->
-
+				onInsert({
+					el: $(this),
+					selector: selector,
+					handleObj: handleObj,
+					success: callback
+				})
 )(jQuery)
