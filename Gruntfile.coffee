@@ -7,9 +7,10 @@ module.exports = (grunt) ->
 	# =============
 	grunt.initConfig
 		pkg: pkg
-		concat:
+		coffee:
 			dist:
-				src: ['src/global.js', 'src/*.js', 'src/**/*.js']
+				src:  ['src/*.coffee'],
+				dest: '<%= pkg.distDirectory %>/<%= pkg.name %>-latest.js'
 		uglify:
 			options:
 				mangle: false
@@ -29,12 +30,12 @@ module.exports = (grunt) ->
 				src: ['<%= pkg.distDirectory %>/<%= pkg.name %>-latest.js']
 				dest: '<%= pkg.distDirectory %>/<%= pkg.name %>-<%= pkg.version %>.js'
 		watch:
-			files: ['src/*.js']
-			tasks: ['concat']
+			files: ['src/*.coffee', 'src/**/*.coffee']
+			tasks: ['coffee']
 
 	# Dev / prod toggles
 	if process.env['DEV'] is 'true'
-		grunt.config.set('concat.dist.dest', '<%= pkg.devDistDirectory %>/<%= pkg.name %>-latest.js')
+		grunt.config.set('coffee.dist.dest', '<%= pkg.devDistDirectory %>/<%= pkg.name %>-latest.js')
 		grunt.config.set('uglify.dist.dest', '<%= pkg.devDistDirectory %>/<%= pkg.name %>-<%= pkg.version %>.js')
 	else
 		grunt.config.set('concat.dist.dest', '<%= pkg.distDirectory %>/<%= pkg.name %>-latest.js')
