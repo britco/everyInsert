@@ -13,3 +13,6 @@ $(document).on('everyInsert', 'div.selector', function() {
 
 Don't bind it directly to the element like `$('div.selector').on..`, because
 the special event add function won't run if the element does not exist yet.
+
+## Inspiration
+* http://davidwalsh.name/detect-node-insertion
