@@ -7,6 +7,7 @@ Custom event for jQuery that gets called whenever an element with the selector y
 ## Download
 [every-insert-0.1.0.js](https://raw2.github.com/britco/everyInsert/master/dist/every-insert-0.1.0.js)
 
+## Setup
 Setup like so:
 
 ````
