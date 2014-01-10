@@ -50,7 +50,7 @@ module.exports = (grunt) ->
 	# =====
 	grunt.registerTask 'build', ->
 		# Build for release
-		grunt.task.run 'concat'
+		grunt.task.run 'coffee'
 
 		if process.env?.DEV != 'true'
 			grunt.task.run 'uglify'
