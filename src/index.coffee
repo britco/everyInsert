@@ -76,7 +76,6 @@
 
 			# Now check if animation is the one you are looking for
 			if eventAnimationName == animationName
-				console.log 'success'
 				success(e)
 
 		handleObj.data.ns = ns = ".#{handleObj.guid}"
