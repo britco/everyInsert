@@ -84,10 +84,10 @@
 
 		$(document).on(namespacedAnimationEvents, selector, onAnimation)
 
-	$.event.special.everyInsert =
+	$.event.special.everyinsert =
 		add: (handleObj) ->
 			# Only need to add event for each GUID once.. so if you do
-			# $('input').on('everyInsert') it won't add all the bindings for
+			# $('input').on('everyinsert') it won't add all the bindings for
 			# each input. it will just add each one.
 			if handleObj.guid in processedGUIDs
 				return

@@ -66,7 +66,7 @@
       handleObj.data.namespacedAnimationEvents = namespacedAnimationEvents;
       return $(document).on(namespacedAnimationEvents, selector, onAnimation);
     };
-    return $.event.special.everyInsert = {
+    return $.event.special.everyinsert = {
       add: function(handleObj) {
         var callback, selector, _ref, _ref1,
           _this = this;

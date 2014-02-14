@@ -1,9 +1,9 @@
 var cb = function() { console.log('cb'); };
-$(document).on('everyInsert', 'div', cb);
+$(document).on('everyinsert', 'div', cb);
 $('body').append('<div class="test" />');
-$(document).off('everyInsert', 'div', cb);
+$(document).off('everyinsert', 'div', cb);
 
 var cb = function() { console.log('cb'); };
-$(document).on('everyInsert', 'div', { existing: false }, cb);
+$(document).on('everyinsert', 'div', { existing: false }, cb);
 $('body').append('<div class="test" />');
-$(document).off('everyInsert', 'div', cb);
+$(document).off('everyinsert', 'div', cb);
