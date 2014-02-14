@@ -38,7 +38,7 @@ module.exports = (grunt) ->
 		grunt.config.set('coffee.dist.dest', '<%= pkg.devDistDirectory %>/<%= pkg.name %>-latest.js')
 		grunt.config.set('uglify.dist.dest', '<%= pkg.devDistDirectory %>/<%= pkg.name %>-<%= pkg.version %>.js')
 	else
-		grunt.config.set('concat.dist.dest', '<%= pkg.distDirectory %>/<%= pkg.name %>-latest.js')
+		grunt.config.set('coffee.dist.dest', '<%= pkg.distDirectory %>/<%= pkg.name %>-latest.js')
 		grunt.config.set('uglify.dist.dest', '<%= pkg.distDirectory %>/<%= pkg.name %>-<%= pkg.version %>.js')
 
 	# Dependencies
