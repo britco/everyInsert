@@ -36,4 +36,4 @@ $(document).on('everyinsert', 'div', { existing: false }, function() {});
 * http://davidwalsh.name/detect-node-insertion
 
 ## License
-form-helpers is available under the [MIT License](LICENSE.md).
+Available under the [MIT License](LICENSE.md).
