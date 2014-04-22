@@ -1,0 +1,14 @@
+{
+  "name": "every-insert",
+  "version": "0.1.0",
+  "main": "dist/every-insert-0.1.0.js",
+  "ignore": [
+    ".DS_STORE",
+    ".jshintrc",
+    "**/*.txt"
+  ],
+  "dependencies": {
+  },
+  "devDependencies": {
+  }
+}
