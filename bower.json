@@ -1,11 +1,11 @@
 {
   "name": "every-insert",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "homepage": "https://github.com/britco/everyInsert",
   "authors": [
     "Paul Dufour <paul@brit.co>"
   ],
-  "main": "dist/every-insert-0.1.1.js",
+  "main": "dist/every-insert-0.1.2.js",
   "license": "MIT",
   "ignore": [
     ".DS_STORE",
