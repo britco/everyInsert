@@ -51,6 +51,4 @@ module.exports = (grunt) ->
 	grunt.registerTask 'build', ->
 		# Build for release
 		grunt.task.run 'coffee'
-
-		if process.env?.DEV != 'true'
-			grunt.task.run 'uglify'
+		grunt.task.run 'uglify'

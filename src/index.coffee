@@ -105,7 +105,12 @@
 				if e?.currentTarget?
 					ctx = $(e.currentTarget)
 				else if e instanceof $
-					ctx = e
+					for ctx in arguments
+						break
+
+					e =
+						currentTarget: ctx.get(0)
+						target: x.get(0)
 				else
 					ctx = null
 
@@ -117,7 +122,7 @@
 					callback($(this))
 
 			if not documentTagged
-				$(document).ready =>
+				$(document).ready ->
 					# Prevents animations getting fired on elements getting shown
 					documentTagged = true
 
